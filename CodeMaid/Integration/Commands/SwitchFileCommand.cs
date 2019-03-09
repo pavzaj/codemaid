@@ -3,32 +3,56 @@ using SteveCadwallader.CodeMaid.Helpers;
 using SteveCadwallader.CodeMaid.Properties;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
+using Task = System.Threading.Tasks.Task;
 
 namespace SteveCadwallader.CodeMaid.Integration.Commands
 {
     /// <summary>
     /// A command that provides for switching between files based on their filename.
     /// </summary>
-    internal class SwitchFileCommand : BaseCommand
+    internal sealed class SwitchFileCommand : BaseCommand
     {
-        #region Constructors
+        /// <summary>
+        /// A cached setting set container for accessing sets of related file extensions.
+        /// </summary>
+        private readonly CachedSettingSet<IList<string>> _relatedFileExtensions =
+            new CachedSettingSet<IList<string>>(()
+                => Settings.Default.Switching_RelatedFileExtensionsExpression,
+                   expression => expression
+                       .Split(new[] { "||" }, StringSplitOptions.RemoveEmptyEntries)
+                       .Select(rfeGroup => rfeGroup
+                           .Split(' ')
+                           .Select(item => item.Trim().ToLower())
+                           .Where(x => !string.IsNullOrEmpty(x)).ToList())
+                       .Where(list => list.Count >= 2)
+                       .ToList());
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SwitchFileCommand" /> class.
         /// </summary>
         /// <param name="package">The hosting package.</param>
         internal SwitchFileCommand(CodeMaidPackage package)
-            : base(package,
-                   new CommandID(PackageGuids.GuidCodeMaidCommandSwitchFile, PackageIds.CmdIDCodeMaidSwitchFile))
+            : base(package, PackageGuids.GuidCodeMaidMenuSet, PackageIds.CmdIDCodeMaidSwitchFile)
         {
         }
 
-        #endregion Constructors
+        /// <summary>
+        /// A singleton instance of this command.
+        /// </summary>
+        public static SwitchFileCommand Instance { get; private set; }
 
-        #region BaseCommand Methods
+        /// <summary>
+        /// Initializes a singleton instance of this command.
+        /// </summary>
+        /// <param name="package">The hosting package.</param>
+        /// <returns>A task.</returns>
+        public static async Task InitializeAsync(CodeMaidPackage package)
+        {
+            Instance = new SwitchFileCommand(package);
+            await package.SettingsMonitor.WatchAsync(s => s.Feature_SwitchFile, Instance.SwitchAsync);
+        }
 
         /// <summary>
         /// Called to update the current status of the command.
@@ -36,16 +60,16 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
         protected override void OnBeforeQueryStatus()
         {
             string alternatePath = GetAlternatePathIfExists(Package.ActiveDocument);
-            bool canAlterate = !String.IsNullOrEmpty(alternatePath);
+            bool canAlterate = !string.IsNullOrEmpty(alternatePath);
 
             Enabled = canAlterate;
             if (canAlterate)
             {
-                Text = "S&witch to " + Path.GetFileName(alternatePath);
+                Text = Resources.SWitchTo + Path.GetFileName(alternatePath);
             }
             else
             {
-                Text = "S&witch File";
+                Text = Resources.SWitchFile;
             }
         }
 
@@ -57,15 +81,11 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
             base.OnExecute();
 
             string alternatePath = GetAlternatePathIfExists(Package.ActiveDocument);
-            if (!String.IsNullOrEmpty(alternatePath))
+            if (!string.IsNullOrEmpty(alternatePath))
             {
                 Package.IDE.ItemOperations.OpenFile(alternatePath, Constants.vsViewKindAny);
             }
         }
-
-        #endregion BaseCommand Methods
-
-        #region Private Methods
 
         /// <summary>
         /// Attempts to get a path to an alternate document for the specified document as well as
@@ -77,7 +97,7 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
         {
             var alternatePaths = GetAlternatePaths(document);
 
-            return alternatePaths.FirstOrDefault(x => !String.IsNullOrEmpty(x) && Package.IDE.Solution.FindProjectItem(x) != null);
+            return alternatePaths.FirstOrDefault(x => !string.IsNullOrEmpty(x) && Package.IDE.Solution.FindProjectItem(x) != null);
         }
 
         /// <summary>
@@ -118,24 +138,5 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
 
             return results;
         }
-
-        #endregion Private Methods
-
-        #region Private Fields
-
-        /// <summary>
-        /// A cached setting set container for accessing sets of related file extensions.
-        /// </summary>
-        private readonly CachedSettingSet<IList<string>> _relatedFileExtensions =
-            new CachedSettingSet<IList<string>>(() => Settings.Default.Switching_RelatedFileExtensionsExpression,
-                                                      expression =>
-                                                      expression.Split(new[] { "||" }, StringSplitOptions.RemoveEmptyEntries)
-                                                                .Select(rfeGroup =>
-                                                                        rfeGroup.Split(' ')
-                                                                                .Select(item => item.Trim().ToLower())
-                                                                                .Where(x => !string.IsNullOrEmpty(x)).ToList())
-                                                                .Where(list => list.Count >= 2).ToList());
-
-        #endregion Private Fields
     }
 }

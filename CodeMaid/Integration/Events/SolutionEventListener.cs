@@ -1,32 +1,30 @@
 using EnvDTE;
 using SteveCadwallader.CodeMaid.Helpers;
 using System;
+using System.Threading.Tasks;
 
 namespace SteveCadwallader.CodeMaid.Integration.Events
 {
     /// <summary>
     /// A class that encapsulates listening for solution events.
     /// </summary>
-    internal class SolutionEventListener : BaseEventListener
+    internal sealed class SolutionEventListener : BaseEventListener
     {
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SolutionEventListener" /> class.
         /// </summary>
         /// <param name="package">The package hosting the event listener.</param>
-        internal SolutionEventListener(CodeMaidPackage package)
+        private SolutionEventListener(CodeMaidPackage package)
             : base(package)
         {
             // Store access to the solutions events, otherwise events will not register properly via DTE.
             SolutionEvents = Package.IDE.Events.SolutionEvents;
-            SolutionEvents.Opened += SolutionEvents_Opened;
-            SolutionEvents.AfterClosing += SolutionEvents_AfterClosing;
         }
 
-        #endregion Constructors
-
-        #region Internal Events
+        /// <summary>
+        /// An event raised when a solution has closed.
+        /// </summary>
+        internal event Action OnSolutionClosed;
 
         /// <summary>
         /// An event raised when a solution has opened.
@@ -34,35 +32,48 @@ namespace SteveCadwallader.CodeMaid.Integration.Events
         internal event Action OnSolutionOpened;
 
         /// <summary>
-        /// An event raised when a solution has closed.
+        /// A singleton instance of this command.
         /// </summary>
-        internal event Action OnSolutionClosed;
-
-        #endregion Internal Events
-
-        #region Private Properties
+        public static SolutionEventListener Instance { get; private set; }
 
         /// <summary>
         /// Gets or sets a pointer to the IDE solution events.
         /// </summary>
         private SolutionEvents SolutionEvents { get; set; }
 
-        #endregion Private Properties
-
-        #region Private Methods
+        /// <summary>
+        /// Initializes a singleton instance of this event listener.
+        /// </summary>
+        /// <param name="package">The hosting package.</param>
+        /// <returns>A task.</returns>
+        public static async Task InitializeAsync(CodeMaidPackage package)
+        {
+            Instance = new SolutionEventListener(package);
+            await Instance.SwitchAsync(on: true);
+        }
 
         /// <summary>
-        /// An event handler for a solution being opened.
+        /// Fires the solution opened event directly, used for lazy loading scenarios where we detect
+        /// the solution load after it happens.
         /// </summary>
-        private void SolutionEvents_Opened()
-        {
-            var onSolutionOpened = OnSolutionOpened;
-            if (onSolutionOpened != null)
-            {
-                OutputWindowHelper.DiagnosticWriteLine("SolutionEventListener.OnSolutionOpened raised");
+        internal void FireSolutionOpenedEvent() => SolutionEvents_Opened();
 
-                onSolutionOpened();
-            }
+        /// <summary>
+        /// Registers event handlers with the IDE.
+        /// </summary>
+        protected override void RegisterListeners()
+        {
+            SolutionEvents.Opened += SolutionEvents_Opened;
+            SolutionEvents.AfterClosing += SolutionEvents_AfterClosing;
+        }
+
+        /// <summary>
+        /// Unregisters event handlers with the IDE.
+        /// </summary>
+        protected override void UnRegisterListeners()
+        {
+            SolutionEvents.Opened -= SolutionEvents_Opened;
+            SolutionEvents.AfterClosing -= SolutionEvents_AfterClosing;
         }
 
         /// <summary>
@@ -79,31 +90,18 @@ namespace SteveCadwallader.CodeMaid.Integration.Events
             }
         }
 
-        #endregion Private Methods
-
-        #region IDisposable Members
-
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
+        /// An event handler for a solution being opened.
         /// </summary>
-        /// <param name="disposing">
-        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
-        /// only unmanaged resources.
-        /// </param>
-        protected override void Dispose(bool disposing)
+        private void SolutionEvents_Opened()
         {
-            if (!IsDisposed)
+            var onSolutionOpened = OnSolutionOpened;
+            if (onSolutionOpened != null)
             {
-                IsDisposed = true;
+                OutputWindowHelper.DiagnosticWriteLine("SolutionEventListener.OnSolutionOpened raised");
 
-                if (disposing && SolutionEvents != null)
-                {
-                    SolutionEvents.Opened -= SolutionEvents_Opened;
-                    SolutionEvents.AfterClosing -= SolutionEvents_AfterClosing;
-                }
+                onSolutionOpened();
             }
         }
-
-        #endregion IDisposable Members
     }
 }

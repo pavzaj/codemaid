@@ -73,7 +73,7 @@ namespace SteveCadwallader.CodeMaid.Logic.Reorganizing
         /// <param name="baseItem">The base item.</param>
         internal void MoveItemAboveBase(BaseCodeItem itemToMove, BaseCodeItem baseItem)
         {
-            new UndoTransactionHelper(_package, "CodeMaid Move Item Above").Run(
+            new UndoTransactionHelper(_package, Resources.CodeMaidMoveItemAbove).Run(
                 () => RepositionItemAboveBase(itemToMove, baseItem));
         }
 
@@ -84,7 +84,7 @@ namespace SteveCadwallader.CodeMaid.Logic.Reorganizing
         /// <param name="baseItem">The base item.</param>
         internal void MoveItemBelowBase(BaseCodeItem itemToMove, BaseCodeItem baseItem)
         {
-            new UndoTransactionHelper(_package, "CodeMaid Move Item Below").Run(
+            new UndoTransactionHelper(_package, Resources.CodeMaidMoveItemBelow).Run(
                 () => RepositionItemBelowBase(itemToMove, baseItem));
         }
 
@@ -95,7 +95,7 @@ namespace SteveCadwallader.CodeMaid.Logic.Reorganizing
         /// <param name="baseItem">The base item.</param>
         internal void MoveItemIntoBase(BaseCodeItem itemToMove, ICodeItemParent baseItem)
         {
-            new UndoTransactionHelper(_package, "CodeMaid Move Item Into").Run(
+            new UndoTransactionHelper(_package, Resources.CodeMaidMoveItemInto).Run(
                 () => RepositionItemIntoBase(itemToMove, baseItem));
         }
 
@@ -107,11 +107,11 @@ namespace SteveCadwallader.CodeMaid.Logic.Reorganizing
         {
             if (!_codeReorganizationAvailabilityLogic.CanReorganize(document, true)) return;
 
-            new UndoTransactionHelper(_package, $"CodeMaid Reorganize for '{document.Name}'").Run(
+            new UndoTransactionHelper(_package, string.Format(Resources.CodeMaidReorganizeFor0, document.Name)).Run(
                 delegate
                 {
                     OutputWindowHelper.DiagnosticWriteLine($"CodeReorganizationManager.Reorganize started for '{document.FullName}'");
-                    _package.IDE.StatusBar.Text = $"CodeMaid is reorganizing '{document.Name}'...";
+                    _package.IDE.StatusBar.Text = string.Format(Resources.Reorganize_CodeMaidIsReorganizing0, document.Name);
 
                     // Retrieve all relevant code items (excluding using statements).
                     var rawCodeItems = _codeModelManager.RetrieveAllCodeItems(document).Where(x => !(x is CodeItemUsingStatement));
@@ -123,7 +123,7 @@ namespace SteveCadwallader.CodeMaid.Logic.Reorganizing
                     // Recursively reorganize the code tree.
                     RecursivelyReorganize(codeTree);
 
-                    _package.IDE.StatusBar.Text = $"CodeMaid reorganized '{document.Name}'.";
+                    _package.IDE.StatusBar.Text = string.Format(Resources.CodeMaidReorganized0, document.Name);
                     OutputWindowHelper.DiagnosticWriteLine($"CodeReorganizationManager.Reorganize completed for '{document.FullName}'");
                 });
         }
@@ -240,8 +240,7 @@ namespace SteveCadwallader.CodeMaid.Logic.Reorganizing
             if (itemToMove == baseItem) return;
 
             bool separateWithNewLine = ShouldBeSeparatedByNewLine(itemToMove, baseItem);
-            int cursorOffset;
-            var text = GetTextAndRemoveItem(itemToMove, out cursorOffset);
+            var text = GetTextAndRemoveItem(itemToMove, out int cursorOffset);
 
             baseItem.RefreshCachedPositionAndName();
             var baseStartPoint = baseItem.StartPoint;
@@ -276,8 +275,7 @@ namespace SteveCadwallader.CodeMaid.Logic.Reorganizing
             if (itemToMove == baseItem) return;
 
             bool separateWithNewLine = ShouldBeSeparatedByNewLine(baseItem, itemToMove);
-            int cursorOffset;
-            var text = GetTextAndRemoveItem(itemToMove, out cursorOffset);
+            var text = GetTextAndRemoveItem(itemToMove, out int cursorOffset);
 
             baseItem.RefreshCachedPositionAndName();
             var baseEndPoint = baseItem.EndPoint;
@@ -316,8 +314,7 @@ namespace SteveCadwallader.CodeMaid.Logic.Reorganizing
             if (itemToMove == baseItem) return;
 
             bool padWithNewLine = _insertBlankLinePaddingLogic.ShouldBeFollowedByBlankLine(itemToMove);
-            int cursorOffset;
-            var text = GetTextAndRemoveItem(itemToMove, out cursorOffset);
+            var text = GetTextAndRemoveItem(itemToMove, out int cursorOffset);
 
             baseItem.RefreshCachedPositionAndName();
             var baseInsertPoint = baseItem.InsertPoint;
@@ -372,8 +369,7 @@ namespace SteveCadwallader.CodeMaid.Logic.Reorganizing
             {
                 var item = desiredOrder[desiredIndex];
 
-                var itemAsParent = item as ICodeItemParent;
-                if (itemAsParent != null && ShouldReorganizeChildren(item))
+                if (item is ICodeItemParent itemAsParent && ShouldReorganizeChildren(item))
                 {
                     RecursivelyReorganize(itemAsParent.Children, itemAsParent);
                 }

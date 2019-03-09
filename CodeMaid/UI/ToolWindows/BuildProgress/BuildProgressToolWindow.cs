@@ -1,5 +1,7 @@
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using SteveCadwallader.CodeMaid.Properties;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,15 +17,8 @@ namespace SteveCadwallader.CodeMaid.UI.ToolWindows.BuildProgress
     [Guid(PackageGuids.GuidCodeMaidToolWindowBuildProgressString)]
     public class BuildProgressToolWindow : ToolWindowPane
     {
-        #region Fields
-
-        private const string DefaultCaption = "Build Progress";
-
         private readonly BuildProgressViewModel _viewModel;
-
-        #endregion Fields
-
-        #region Constructors
+        private readonly string DefaultCaption = Resources.BuildProgress;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BuildProgressToolWindow" /> class.
@@ -45,9 +40,10 @@ namespace SteveCadwallader.CodeMaid.UI.ToolWindows.BuildProgress
             base.Content = new BuildProgressView { DataContext = _viewModel };
         }
 
-        #endregion Constructors
-
-        #region Properties
+        /// <summary>
+        /// Gets or sets the package that owns the tool window.
+        /// </summary>
+        private new CodeMaidPackage Package => base.Package as CodeMaidPackage;
 
         /// <summary>
         /// Gets or sets the last known build action.
@@ -55,14 +51,14 @@ namespace SteveCadwallader.CodeMaid.UI.ToolWindows.BuildProgress
         private vsBuildAction BuildAction { get; set; }
 
         /// <summary>
-        /// Gets or sets the last known build scope.
-        /// </summary>
-        private vsBuildScope BuildScope { get; set; }
-
-        /// <summary>
         /// Gets or sets the projects which are currently building.
         /// </summary>
         private List<string> BuildingProjects { get; set; }
+
+        /// <summary>
+        /// Gets or sets the last known build scope.
+        /// </summary>
+        private vsBuildScope BuildScope { get; set; }
 
         /// <summary>
         /// Gets or sets the number of projects built.
@@ -73,11 +69,6 @@ namespace SteveCadwallader.CodeMaid.UI.ToolWindows.BuildProgress
         /// Gets or sets the number of projects to be built.
         /// </summary>
         private int NumberOfProjectsToBeBuilt { get; set; }
-
-        /// <summary>
-        /// Gets or sets the package that owns the tool window.
-        /// </summary>
-        private new CodeMaidPackage Package => base.Package as CodeMaidPackage;
 
         /// <summary>
         /// Gets the progress percentage, otherwise zero if cannot be determined.
@@ -94,9 +85,10 @@ namespace SteveCadwallader.CodeMaid.UI.ToolWindows.BuildProgress
             }
         }
 
-        #endregion Properties
-
-        #region Methods
+        public void Close()
+        {
+            (Frame as IVsWindowFrame).CloseFrame((uint)__FRAMECLOSE.FRAMECLOSE_NoSave);
+        }
 
         /// <summary>
         /// This method can be overriden by the derived class to execute any code that needs to run
@@ -142,6 +134,20 @@ namespace SteveCadwallader.CodeMaid.UI.ToolWindows.BuildProgress
         }
 
         /// <summary>
+        /// A method called to notify the tool window that a build is done.
+        /// </summary>
+        /// <param name="scope">The scope.</param>
+        /// <param name="action">The action.</param>
+        internal void NotifyBuildDone(vsBuildScope scope, vsBuildAction action)
+        {
+            Caption = DefaultCaption;
+            _viewModel.HasBuildFailed = false;
+            _viewModel.IsBuildActive = false;
+            _viewModel.IsProgressIndeterminate = false;
+            _viewModel.ProgressPercentage = 0;
+        }
+
+        /// <summary>
         /// A method called to notify the tool window that an individual project build has begun.
         /// </summary>
         /// <param name="project">The project.</param>
@@ -177,20 +183,6 @@ namespace SteveCadwallader.CodeMaid.UI.ToolWindows.BuildProgress
         }
 
         /// <summary>
-        /// A method called to notify the tool window that a build is done.
-        /// </summary>
-        /// <param name="scope">The scope.</param>
-        /// <param name="action">The action.</param>
-        internal void NotifyBuildDone(vsBuildScope scope, vsBuildAction action)
-        {
-            Caption = DefaultCaption;
-            _viewModel.HasBuildFailed = false;
-            _viewModel.IsBuildActive = false;
-            _viewModel.IsProgressIndeterminate = false;
-            _viewModel.ProgressPercentage = 0;
-        }
-
-        /// <summary>
         /// Extracts the project name from the specified project string.
         /// </summary>
         /// <param name="project">The raw project string to process.</param>
@@ -216,26 +208,26 @@ namespace SteveCadwallader.CodeMaid.UI.ToolWindows.BuildProgress
             // First append the word 'Batch ' if this is a batch build event.
             if (buildScope == vsBuildScope.vsBuildScopeBatch)
             {
-                stringBuilder.Append("Batch ");
+                stringBuilder.Append(Resources.Batch);
             }
 
             // Next append the action-specific build string.
             switch (buildAction)
             {
                 case vsBuildAction.vsBuildActionBuild:
-                    stringBuilder.Append("Building");
+                    stringBuilder.Append(Resources.Building);
                     break;
 
                 case vsBuildAction.vsBuildActionClean:
-                    stringBuilder.Append("Cleaning");
+                    stringBuilder.Append(Resources.Cleaning);
                     break;
 
                 case vsBuildAction.vsBuildActionDeploy:
-                    stringBuilder.Append("Deploying");
+                    stringBuilder.Append(Resources.Deploying);
                     break;
 
                 case vsBuildAction.vsBuildActionRebuildAll:
-                    stringBuilder.Append("Rebuilding");
+                    stringBuilder.Append(Resources.Rebuilding);
                     break;
             }
 
@@ -289,7 +281,5 @@ namespace SteveCadwallader.CodeMaid.UI.ToolWindows.BuildProgress
 
             return $"{DefaultCaption}{progressString}: {buildString} {string.Join(", ", projectNames)}...";
         }
-
-        #endregion Methods
     }
 }

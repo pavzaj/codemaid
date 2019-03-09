@@ -45,7 +45,7 @@ namespace SteveCadwallader.CodeMaid.IntegrationTests.Cleaning.VisualStudio
         [HostType("VS IDE")]
         public void CleaningVisualStudioReinsertAfterRemoveUnusedUsingStatements_RunsAsExpected()
         {
-            Settings.Default.Cleaning_RunVisualStudioRemoveUnusedUsingStatements = true;
+            Settings.Default.Cleaning_RunVisualStudioRemoveAndSortUsingStatements = true;
             Settings.Default.Cleaning_UsingStatementsToReinsertWhenRemovedExpression = "using System;||using System.Linq;";
 
             TestOperations.ExecuteCommandAndVerifyResults(RunRemoveUnusedUsingStatements, _projectItem, @"Data\ReinsertAfterRemoveUnusedUsingStatements_Cleaned.cs");
@@ -55,7 +55,7 @@ namespace SteveCadwallader.CodeMaid.IntegrationTests.Cleaning.VisualStudio
         [HostType("VS IDE")]
         public void CleaningVisualStudioReinsertAfterRemoveUnusedUsingStatements_DoesNothingWhenSettingIsDisabled()
         {
-            Settings.Default.Cleaning_RunVisualStudioRemoveUnusedUsingStatements = false;
+            Settings.Default.Cleaning_RunVisualStudioRemoveAndSortUsingStatements = false;
             Settings.Default.Cleaning_UsingStatementsToReinsertWhenRemovedExpression = "using System;||using System.Linq;";
 
             TestOperations.ExecuteCommandAndVerifyNoChanges(RunRemoveUnusedUsingStatements, _projectItem);
@@ -67,7 +67,7 @@ namespace SteveCadwallader.CodeMaid.IntegrationTests.Cleaning.VisualStudio
 
         private static void RunRemoveUnusedUsingStatements(Document document)
         {
-            _usingStatementCleanupLogic.RemoveUnusedUsingStatements(document.GetTextDocument());
+            _usingStatementCleanupLogic.RemoveAndSortUsingStatements(document.GetTextDocument());
         }
 
         #endregion Helpers

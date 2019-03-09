@@ -10,7 +10,6 @@ using SteveCadwallader.CodeMaid.Model.CodeItems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using IServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 namespace SteveCadwallader.CodeMaid.Logic.Digging
 {
@@ -25,7 +24,6 @@ namespace SteveCadwallader.CodeMaid.Logic.Digging
         private readonly CodeMaidPackage _package;
         private readonly IVsEditorAdaptersFactoryService _editorAdaptersFactoryService;
         private readonly IOutliningManagerService _outliningManagerService;
-        private readonly ServiceProvider _serviceProvider;
 
         private Document _document;
         private IOutliningManager _outliningManager;
@@ -48,7 +46,6 @@ namespace SteveCadwallader.CodeMaid.Logic.Digging
             // Retrieve services needed for outlining from the package.
             _editorAdaptersFactoryService = _package.ComponentModel.GetService<IVsEditorAdaptersFactoryService>();
             _outliningManagerService = _package.ComponentModel.GetService<IOutliningManagerService>();
-            _serviceProvider = new ServiceProvider((IServiceProvider)_package.IDE);
         }
 
         #endregion Constructors
@@ -114,8 +111,7 @@ namespace SteveCadwallader.CodeMaid.Logic.Digging
         /// <param name="eventArgs">The event arguments.</param>
         private void OnCodeItemParentIsExpandedChanged(object sender, EventArgs eventArgs)
         {
-            var codeItemParent = sender as ICodeItemParent;
-            if (codeItemParent != null)
+            if (sender is ICodeItemParent codeItemParent)
             {
                 var iCollapsible = FindCollapsibleFromCodeItemParent(codeItemParent);
                 if (iCollapsible != null)
@@ -277,16 +273,12 @@ namespace SteveCadwallader.CodeMaid.Logic.Digging
         /// <returns>The associated text view, otherwise null.</returns>
         private IVsTextView GetTextView(Document document)
         {
-            if (_serviceProvider == null || document == null)
+            if (document == null)
             {
                 return null;
             }
 
-            IVsUIHierarchy hierarchy;
-            uint itemID;
-            IVsWindowFrame windowFrame;
-
-            if (VsShellUtilities.IsDocumentOpen(_serviceProvider, document.FullName, Guid.Empty, out hierarchy, out itemID, out windowFrame))
+            if (VsShellUtilities.IsDocumentOpen(_package, document.FullName, Guid.Empty, out IVsUIHierarchy hierarchy, out uint itemID, out IVsWindowFrame windowFrame))
             {
                 return VsShellUtilities.GetTextView(windowFrame);
             }

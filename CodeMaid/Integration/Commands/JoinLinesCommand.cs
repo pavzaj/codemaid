@@ -1,36 +1,47 @@
 using EnvDTE;
 using SteveCadwallader.CodeMaid.Helpers;
-using System.ComponentModel.Design;
+using SteveCadwallader.CodeMaid.Properties;
+using System.Threading.Tasks;
 
 namespace SteveCadwallader.CodeMaid.Integration.Commands
 {
     /// <summary>
     /// A command that provides for joining lines together.
     /// </summary>
-    internal class JoinLinesCommand : BaseCommand
+    internal sealed class JoinLinesCommand : BaseCommand
     {
-        #region Fields
-
         private readonly UndoTransactionHelper _undoTransactionHelper;
-
-        #endregion Fields
-
-        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JoinLinesCommand" /> class.
         /// </summary>
         /// <param name="package">The hosting package.</param>
         internal JoinLinesCommand(CodeMaidPackage package)
-            : base(package,
-                   new CommandID(PackageGuids.GuidCodeMaidCommandJoinLines, PackageIds.CmdIDCodeMaidJoinLines))
+            : base(package, PackageGuids.GuidCodeMaidMenuSet, PackageIds.CmdIDCodeMaidJoinLines)
         {
-            _undoTransactionHelper = new UndoTransactionHelper(package, "CodeMaid Join");
+            _undoTransactionHelper = new UndoTransactionHelper(package, Resources.CodeMaidJoin);
         }
 
-        #endregion Constructors
+        /// <summary>
+        /// A singleton instance of this command.
+        /// </summary>
+        public static JoinLinesCommand Instance { get; private set; }
 
-        #region BaseCommand Methods
+        /// <summary>
+        /// Gets the active text document, otherwise null.
+        /// </summary>
+        private TextDocument ActiveTextDocument => Package.ActiveDocument?.GetTextDocument();
+
+        /// <summary>
+        /// Initializes a singleton instance of this command.
+        /// </summary>
+        /// <param name="package">The hosting package.</param>
+        /// <returns>A task.</returns>
+        public static async Task InitializeAsync(CodeMaidPackage package)
+        {
+            Instance = new JoinLinesCommand(package);
+            await package.SettingsMonitor.WatchAsync(s => s.Feature_JoinLines, Instance.SwitchAsync);
+        }
 
         /// <summary>
         /// Called to update the current status of the command.
@@ -58,19 +69,6 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
             }
         }
 
-        #endregion BaseCommand Methods
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the active text document, otherwise null.
-        /// </summary>
-        private TextDocument ActiveTextDocument => Package.ActiveDocument?.GetTextDocument();
-
-        #endregion Properties
-
-        #region Methods
-
         /// <summary>
         /// Joins the text within the specified text selection.
         /// </summary>
@@ -93,7 +91,5 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
             // Move the cursor forward, clearing the selection.
             textSelection.CharRight();
         }
-
-        #endregion Methods
     }
 }

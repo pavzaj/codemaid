@@ -2,39 +2,29 @@
 using SteveCadwallader.CodeMaid.Helpers;
 using SteveCadwallader.CodeMaid.Logic.Cleaning;
 using SteveCadwallader.CodeMaid.Model;
-using System.ComponentModel.Design;
+using SteveCadwallader.CodeMaid.Properties;
+using System.Threading.Tasks;
 
 namespace SteveCadwallader.CodeMaid.Integration.Commands
 {
     /// <summary>
     /// A command that provides for removing region(s).
     /// </summary>
-    internal class RemoveRegionCommand : BaseCommand
+    internal sealed class RemoveRegionCommand : BaseCommand
     {
-        #region Fields
-
         private readonly CodeModelHelper _codeModelHelper;
         private readonly RemoveRegionLogic _removeRegionLogic;
-
-        #endregion Fields
-
-        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveRegionCommand" /> class.
         /// </summary>
         /// <param name="package">The hosting package.</param>
         internal RemoveRegionCommand(CodeMaidPackage package)
-            : base(package,
-                   new CommandID(PackageGuids.GuidCodeMaidCommandRemoveRegion, PackageIds.CmdIDCodeMaidRemoveRegion))
+            : base(package, PackageGuids.GuidCodeMaidMenuSet, PackageIds.CmdIDCodeMaidRemoveRegion)
         {
             _codeModelHelper = CodeModelHelper.GetInstance(package);
             _removeRegionLogic = RemoveRegionLogic.GetInstance(package);
         }
-
-        #endregion Constructors
-
-        #region Enumerations
 
         /// <summary>
         /// An enumeration of region command scopes.
@@ -47,9 +37,26 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
             Selection
         }
 
-        #endregion Enumerations
+        /// <summary>
+        /// A singleton instance of this command.
+        /// </summary>
+        public static RemoveRegionCommand Instance { get; private set; }
 
-        #region BaseCommand Methods
+        /// <summary>
+        /// Gets the active text document, otherwise null.
+        /// </summary>
+        private TextDocument ActiveTextDocument => Package.ActiveDocument?.GetTextDocument();
+
+        /// <summary>
+        /// Initializes a singleton instance of this command.
+        /// </summary>
+        /// <param name="package">The hosting package.</param>
+        /// <returns>A task.</returns>
+        public static async Task InitializeAsync(CodeMaidPackage package)
+        {
+            Instance = new RemoveRegionCommand(package);
+            await package.SettingsMonitor.WatchAsync(s => s.Feature_RemoveRegion, Instance.SwitchAsync);
+        }
 
         /// <summary>
         /// Called to update the current status of the command.
@@ -63,15 +70,15 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
             switch (regionCommandScope)
             {
                 case RegionCommandScope.CurrentLine:
-                    Text = "&Remove Current Region";
+                    Text = Resources.RemoveCurrentRegion;
                     break;
 
                 case RegionCommandScope.Selection:
-                    Text = "&Remove Selected Regions";
+                    Text = Resources.RemoveSelectedRegions;
                     break;
 
                 default:
-                    Text = "&Remove All Regions";
+                    Text = Resources.RemoveAllRegions;
                     break;
             }
         }
@@ -99,19 +106,6 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
                     break;
             }
         }
-
-        #endregion BaseCommand Methods
-
-        #region Private Properties
-
-        /// <summary>
-        /// Gets the active text document, otherwise null.
-        /// </summary>
-        private TextDocument ActiveTextDocument => Package.ActiveDocument?.GetTextDocument();
-
-        #endregion Private Properties
-
-        #region Private Methods
 
         /// <summary>
         /// Gets the region command scope based on the current document and selection conditions.
@@ -144,7 +138,5 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
 
             return RegionCommandScope.None;
         }
-
-        #endregion Private Methods
     }
 }

@@ -1,30 +1,39 @@
 ﻿using EnvDTE;
 using SteveCadwallader.CodeMaid.Model.CodeItems;
-using System.ComponentModel.Design;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SteveCadwallader.CodeMaid.Integration.Commands
 {
     /// <summary>
     /// A command that provides for finding references of a member within Spade.
     /// </summary>
-    internal class SpadeContextFindReferencesCommand : BaseCommand
+    internal sealed class SpadeContextFindReferencesCommand : BaseCommand
     {
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SpadeContextFindReferencesCommand" /> class.
         /// </summary>
         /// <param name="package">The hosting package.</param>
         internal SpadeContextFindReferencesCommand(CodeMaidPackage package)
-            : base(package,
-                   new CommandID(PackageGuids.GuidCodeMaidCommandSpadeContextFindReferences, PackageIds.CmdIDCodeMaidSpadeContextFindReferences))
+            : base(package, PackageGuids.GuidCodeMaidMenuSet, PackageIds.CmdIDCodeMaidSpadeContextFindReferences)
         {
         }
 
-        #endregion Constructors
+        /// <summary>
+        /// A singleton instance of this command.
+        /// </summary>
+        public static SpadeContextFindReferencesCommand Instance { get; private set; }
 
-        #region BaseCommand Methods
+        /// <summary>
+        /// Initializes a singleton instance of this command.
+        /// </summary>
+        /// <param name="package">The hosting package.</param>
+        /// <returns>A task.</returns>
+        public static async Task InitializeAsync(CodeMaidPackage package)
+        {
+            Instance = new SpadeContextFindReferencesCommand(package);
+            await Instance.SwitchAsync(on: true);
+        }
 
         /// <summary>
         /// Called to update the current status of the command.
@@ -62,7 +71,5 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
             // Invoke the command.
             Package.IDE.ExecuteCommand("Edit.FindAllReferences");
         }
-
-        #endregion BaseCommand Methods
     }
 }

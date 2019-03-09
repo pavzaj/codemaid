@@ -118,16 +118,22 @@ namespace SteveCadwallader.CodeMaid.Helpers
             var codeItemElement = codeItem as BaseCodeItemElement;
             if (codeItemElement == null) return 0;
 
-            switch (codeItemElement.Access)
+            var itemsOrder = new List<vsCMAccess>
             {
-                case vsCMAccess.vsCMAccessPublic: return 1;
-                case vsCMAccess.vsCMAccessAssemblyOrFamily: return 2;
-                case vsCMAccess.vsCMAccessProject: return 3;
-                case vsCMAccess.vsCMAccessProjectOrProtected: return 4;
-                case vsCMAccess.vsCMAccessProtected: return 5;
-                case vsCMAccess.vsCMAccessPrivate: return 6;
-                default: return 0;
+                vsCMAccess.vsCMAccessPublic,
+                vsCMAccess.vsCMAccessAssemblyOrFamily,
+                vsCMAccess.vsCMAccessProject,
+                vsCMAccess.vsCMAccessProjectOrProtected,
+                vsCMAccess.vsCMAccessProtected,
+                vsCMAccess.vsCMAccessPrivate
+            };
+
+            if (Settings.Default.Reorganizing_ReverseOrderByAccessLevel)
+            {
+                itemsOrder.Reverse();
             }
+
+            return itemsOrder.IndexOf(codeItemElement.Access) + 1;
         }
 
         private static int CalculateExplicitInterfaceOffset(BaseCodeItem codeItem)

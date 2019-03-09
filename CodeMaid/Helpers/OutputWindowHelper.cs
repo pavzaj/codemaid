@@ -39,7 +39,7 @@ namespace SteveCadwallader.CodeMaid.Helpers
                 message += $": {ex}";
             }
 
-            WriteLine("Diagnostic", message);
+            WriteLine(Resources.Diagnostic, message);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace SteveCadwallader.CodeMaid.Helpers
         {
             var exceptionMessage = $"{message}: {ex}";
 
-            WriteLine("Handled Exception", exceptionMessage);
+            WriteLine(Resources.HandledException, exceptionMessage);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace SteveCadwallader.CodeMaid.Helpers
         /// <param name="message">The message.</param>
         internal static void WarningWriteLine(string message)
         {
-            WriteLine("Warning", message);
+            WriteLine(Resources.Warning, message);
         }
 
         /// <summary>
@@ -69,14 +69,15 @@ namespace SteveCadwallader.CodeMaid.Helpers
         /// <returns>The CodeMaid output window pane, otherwise null.</returns>
         private static IVsOutputWindowPane GetCodeMaidOutputWindowPane()
         {
-            var outputWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
-            if (outputWindow == null) return null;
+            if (!(Package.GetGlobalService(typeof(SVsOutputWindow)) is IVsOutputWindow outputWindow))
+            {
+                return null;
+            }
 
             Guid outputPaneGuid = new Guid(PackageGuids.GuidCodeMaidOutputPane.ToByteArray());
-            IVsOutputWindowPane windowPane;
 
             outputWindow.CreatePane(ref outputPaneGuid, "CodeMaid", 1, 1);
-            outputWindow.GetPane(ref outputPaneGuid, out windowPane);
+            outputWindow.GetPane(ref outputPaneGuid, out IVsOutputWindowPane windowPane);
 
             return windowPane;
         }

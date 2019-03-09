@@ -1,28 +1,37 @@
 using SteveCadwallader.CodeMaid.Model.CodeTree;
-using System.ComponentModel.Design;
+using System.Threading.Tasks;
 
 namespace SteveCadwallader.CodeMaid.Integration.Commands
 {
     /// <summary>
     /// A command that provides for setting Spade to alphabetical sort order.
     /// </summary>
-    internal class SpadeSortOrderAlphaCommand : BaseCommand
+    internal sealed class SpadeSortOrderAlphaCommand : BaseCommand
     {
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SpadeSortOrderAlphaCommand" /> class.
         /// </summary>
         /// <param name="package">The hosting package.</param>
         internal SpadeSortOrderAlphaCommand(CodeMaidPackage package)
-            : base(package,
-                   new CommandID(PackageGuids.GuidCodeMaidCommandSpadeSortOrderAlpha, PackageIds.CmdIDCodeMaidSpadeSortOrderAlpha))
+            : base(package, PackageGuids.GuidCodeMaidMenuSet, PackageIds.CmdIDCodeMaidSpadeSortOrderAlpha)
         {
         }
 
-        #endregion Constructors
+        /// <summary>
+        /// A singleton instance of this command.
+        /// </summary>
+        public static SpadeSortOrderAlphaCommand Instance { get; private set; }
 
-        #region BaseCommand Methods
+        /// <summary>
+        /// Initializes a singleton instance of this command.
+        /// </summary>
+        /// <param name="package">The hosting package.</param>
+        /// <returns>A task.</returns>
+        public static async Task InitializeAsync(CodeMaidPackage package)
+        {
+            Instance = new SpadeSortOrderAlphaCommand(package);
+            await Instance.SwitchAsync(on: true);
+        }
 
         /// <summary>
         /// Called to update the current status of the command.
@@ -49,7 +58,5 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
                 spade.SortOrder = CodeSortOrder.Alpha;
             }
         }
-
-        #endregion BaseCommand Methods
     }
 }

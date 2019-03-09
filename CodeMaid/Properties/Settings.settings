@@ -12,7 +12,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="Cleaning_ExclusionExpression" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\.Designer\.cs$||\.Designer\.vb$||\.resx$</Value>
+      <Value Profile="(Default)">\.Designer\.cs$||\.Designer\.vb$||\.resx$||\.min\.css$||\.min\.js$</Value>
     </Setting>
     <Setting Name="Cleaning_IncludeCPlusPlus" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -233,17 +233,11 @@
     <Setting Name="Cleaning_RunVisualStudioFormatDocumentCommand" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="Cleaning_RunVisualStudioRemoveUnusedUsingStatements" Type="System.Boolean" Scope="User">
+    <Setting Name="Cleaning_RunVisualStudioRemoveAndSortUsingStatements" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="Cleaning_RunVisualStudioSortUsingStatements" Type="System.Boolean" Scope="User">
+    <Setting Name="Cleaning_SkipRemoveAndSortUsingStatementsDuringAutoCleanupOnSave" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="Cleaning_SkipRemoveUnusedUsingStatementsDuringAutoCleanupOnSave" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="Cleaning_SkipSortUsingStatementsDuringAutoCleanupOnSave" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Cleaning_UpdateAccessorsToBothBeSingleLineOrMultiLine" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -335,11 +329,17 @@
     <Setting Name="Digging_ShowItemMetadata" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="Digging_ShowItemTypes" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
     <Setting Name="Digging_ShowMethodParameters" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="Digging_SynchronizeOutlining" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Finding_ClearSolutionExplorerSearch" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Finding_TemporarilyOpenSolutionFolders" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -476,11 +476,14 @@
     <Setting Name="Reorganizing_RegionsRemoveExistingRegions" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="Reorganizing_ReverseOrderByAccessLevel" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
     <Setting Name="Reorganizing_RunAtStartOfCleanup" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Switching_RelatedFileExtensionsExpression" Type="System.String" Scope="User">
-      <Value Profile="(Default)">.cpp .h||.xaml .xaml.cs||.xml .xsd||.ascx .ascx.cs||.aspx .aspx.cs||.master .master.cs</Value>
+      <Value Profile="(Default)">.cpp .h||.xaml .xaml.cs||.xml .xsd||.ascx .ascx.cs||.aspx .aspx.cs||.master .master.cs||.cshtml .cshtml.cs</Value>
     </Setting>
     <Setting Name="ThirdParty_OtherCleaningCommandsExpression" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -492,6 +495,73 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ThirdParty_UseXAMLStylerCleanup" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Feature_BuildProgressToolWindow" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_CleanupActiveCode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_CleanupAllCode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_CleanupOpenCode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_CleanupSelectedCode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_CloseAllReadOnly" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_CollapseAllSolutionExplorer" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_CollapseSelectedSolutionExplorer" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_CommentFormat" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_FindInSolutionExplorer" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_JoinLines" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_ReadOnlyToggle" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_RemoveRegion" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_ReorganizeActiveCode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_SettingCleanupOnSave" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_SortLines" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_SpadeToolWindow" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Feature_SwitchFile" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Formatting_IgnoreLinesStartingWith" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;ReSharper disable &lt;/string&gt;
+  &lt;string&gt;ReSharper enable &lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="Cleaning_InsertBlankLinePaddingBeforeFieldsSingleLine" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Cleaning_InsertBlankLinePaddingAfterFieldsSingleLine" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>

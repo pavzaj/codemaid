@@ -1,14 +1,86 @@
 # Changelog
 
-## vNext (TBD)
+## vNext (11.0)
 
-These changes have not been released to the official Visual Studio extension gallery, but (if checked) are available in preview within the [CI build](http://vsixgallery.com/extension/4c82e17d-927e-42d2-8460-b473ac7df316/).
+These changes have not been released to the Visual Studio marketplace, but (if checked) are available in preview within the [CI build](http://vsixgallery.com/extension/4c82e17d-927e-42d2-8460-b473ac7df316/).
 
-- [ ] TBD
+- [x] Features
+  - [x] [#625](https://github.com/codecadwallader/codemaid/pull/625) - Use new AsyncPackage base class
+
+- [x] Fixes
+  - [x] [#613](https://github.com/codecadwallader/codemaid/pull/613) - Formatting: Avoid trailing comment line on self closing XML tag - thanks [bonimy](https://github.com/bonimy)!
 
 ## Previous Releases
 
-These are the changes to each version that has been released to the official Visual Studio extension gallery.
+These are the changes to each version that has been released to the Visual Studio marketplace.
+
+## 10.6
+
+**2018-12-09**
+
+- [x] Features
+  - [x] [#582](https://github.com/codecadwallader/codemaid/pull/582) - Digging: New option to show item types (e.g. method return or property type) - thanks [GammaWolf](https://github.com/GammaWolf)!
+  - [x] [#593](https://github.com/codecadwallader/codemaid/pull/593) - Switching: Add .cshtml -> .cshtml.cs to defaults - thanks [derekmckinnon](https://github.com/derekmckinnon)!
+  - [x] [#594](https://github.com/codecadwallader/codemaid/pull/594) - Cleaning: New option to add blank lines before/after single-line fields - thanks [jasonjtyler](https://github.com/jasonjtyler)!
+  - [x] [#604](https://github.com/codecadwallader/codemaid/pull/604) - Turn on VS2019 support - thanks [digovc](https://github.com/digovc)!
+
+## 10.5
+
+**2018-06-09**
+
+- [x] Features
+  - [x] [#477](https://github.com/codecadwallader/codemaid/pull/477) - Digging: New radial progress bar - thanks [Jammer77](https://github.com/Jammer77)!
+  - [x] [#506](https://github.com/codecadwallader/codemaid/pull/506) - Enable localization for Chinese - thanks [maikebing](https://github.com/maikebing)!
+  - [x] [#519](https://github.com/codecadwallader/codemaid/pull/519) - Simplify the code by removing unnecessary guids - thanks [heku](https://github.com/heku)!
+  - [x] [#525](https://github.com/codecadwallader/codemaid/pull/525) - Make all features switchable - thanks [heku](https://github.com/heku)!
+  - [x] [#545](https://github.com/codecadwallader/codemaid/pull/545) - Ignore comment lines starting with certain prefixes - thanks [willemduncan](https://github.com/willemduncan)!
+  
+- [x] Fixes
+  - [x] [#479](https://github.com/codecadwallader/codemaid/pull/479) - Update XAML Styler integration mappings - thanks [grochocki](https://github.com/grochocki)!
+  - [x] [#496](https://github.com/codecadwallader/codemaid/pull/496) - Fix the .NET Framework minimum required version (which is v4.6)
+  - [x] [#541](https://github.com/codecadwallader/codemaid/pull/541) - Project file (.csproj) cleanup - thanks [heku](https://github.com/heku)!
+  - [x] [#546](https://github.com/codecadwallader/codemaid/pull/546) - Fix a setting that would leave a trailing white space when formatting comments - thanks [willemduncan](https://github.com/willemduncan)!
+  - [x] [#556](https://github.com/codecadwallader/codemaid/issues/556) - Partial fix reducing how long we will block waiting for a code model to be built.
+
+## 10.4
+
+**2017-03-26**
+
+- [x] Features
+  - [x] [#444](https://github.com/codecadwallader/codemaid/pull/444) - Cleaning: VB now supports many of the same cleanups as C# - thanks [thehutman](https://github.com/thehutman)!
+  - [x] [#449](https://github.com/codecadwallader/codemaid/pull/449) - Undo a previous pull request for hiding Spade during full screen mode (inconsistent with other extensions) - thanks [iouri-s](https://github.com/iouri-s)!
+
+- [x] Fixes
+  - [x] [#333](https://github.com/codecadwallader/codemaid/issues/333) - Reorganizing: VB now moves attributes - thanks [thehutman](https://github.com/thehutman)!
+  - [x] [#440](https://github.com/codecadwallader/codemaid/issues/440) - Cleaning: Exclude *.min.css and *.min.js files by default
+
+## 10.3
+
+**2017-03-26**
+
+- [x] Features
+  - [x] [#359](https://github.com/codecadwallader/codemaid/pull/359) - Reorganizing: Add option to sort private->public vs. public->private - thanks [ahalassy](https://github.com/ahalassy)!
+  - [x] [#394](https://github.com/codecadwallader/codemaid/pull/394) - Finding: Add ability to clear solution explorer search before finding - thanks [joeburdick](https://github.com/joeburdick)!
+  - [x] [#420](https://github.com/codecadwallader/codemaid/pull/420) - Upgraded projects to .NET 4.6.1 and misc. fixes for VS2017 build support
+
+- [x] Fixes
+  - [x] [#419](https://github.com/codecadwallader/codemaid/pull/419) - Cleaning: Switched using statement cleanup command to workaround VS2017+ReSharper issue that prevented using statement cleanup from activating - thanks [jlbeard84](https://github.com/jlbeard84)!
+
+## 10.2
+
+**2017-01-01**
+
+- [x] Features
+  - [x] [#284](https://github.com/codecadwallader/codemaid/issues/284) - Performance improvements to compiling regular expressions - thanks [flagbug](https://github.com/flagbug)!
+  - [x] [#298](https://github.com/codecadwallader/codemaid/issues/298) - First class support for VB regions (viewing, inserting and removing)
+  - [x] [#337](https://github.com/codecadwallader/codemaid/issues/337) - Reorganizing: Add option to put explicit interface implementations after other members - thanks [samcragg](https://github.com/samcragg)!
+  - [x] [#371](https://github.com/codecadwallader/codemaid/issues/371) - Support for VS2017 RC
+
+- [x] Fixes
+  - [x] [#290](https://github.com/codecadwallader/codemaid/issues/290) - Finding: When track active item is enabled an error can be displayed on invocation
+  - [x] [#315](https://github.com/codecadwallader/codemaid/issues/315) - Reorganizing: Explicit interface implementations may take multiple passes to get in stable order - thanks [samcragg](https://github.com/samcragg)!
+  - [x] [#326](https://github.com/codecadwallader/codemaid/issues/326) - Digging: VB comments were not visible
+  - [x] [#342](https://github.com/codecadwallader/codemaid/issues/342) - Digging: VB regions were not visible - thanks [aeab13](https://github.com/aeab13)!
 
 ## 10.1
 

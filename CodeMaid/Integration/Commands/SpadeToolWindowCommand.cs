@@ -1,51 +1,48 @@
 using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
-using System.ComponentModel.Design;
+using System.Threading.Tasks;
 
 namespace SteveCadwallader.CodeMaid.Integration.Commands
 {
     /// <summary>
     /// A command that provides for launching the Spade tool window.
     /// </summary>
-    internal class SpadeToolWindowCommand : BaseCommand
+    internal sealed class SpadeToolWindowCommand : BaseCommand
     {
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SpadeToolWindowCommand" /> class.
         /// </summary>
         /// <param name="package">The hosting package.</param>
         internal SpadeToolWindowCommand(CodeMaidPackage package)
-            : base(package,
-                   new CommandID(PackageGuids.GuidCodeMaidCommandSpadeToolWindow, PackageIds.CmdIDCodeMaidSpadeToolWindow))
+            : base(package, PackageGuids.GuidCodeMaidMenuSet, PackageIds.CmdIDCodeMaidSpadeToolWindow)
         {
         }
-
-        #endregion Constructors
-
-        #region BaseCommand Methods
 
         /// <summary>
-        /// Called to execute the command.
+        /// A singleton instance of this command.
         /// </summary>
-        protected override void OnExecute()
-        {
-            base.OnExecute();
+        public static SpadeToolWindowCommand Instance { get; private set; }
 
-            var spade = Package.SpadeForceLoad;
-            if (spade != null)
-            {
-                var spadeFrame = spade.Frame as IVsWindowFrame;
-                if (spadeFrame != null)
-                {
-                    spadeFrame.Show();
-                }
-            }
+        /// <summary>
+        /// Initializes a singleton instance of this command.
+        /// </summary>
+        /// <param name="package">The hosting package.</param>
+        /// <returns>A task.</returns>
+        public static async Task InitializeAsync(CodeMaidPackage package)
+        {
+            Instance = new SpadeToolWindowCommand(package);
+            await package.SettingsMonitor.WatchAsync(s => s.Feature_SpadeToolWindow, Instance.SwitchAsync);
         }
 
-        #endregion BaseCommand Methods
+        public override async Task SwitchAsync(bool on)
+        {
+            await base.SwitchAsync(on);
 
-        #region Internal Methods
+            if (!on)
+            {
+                Package.Spade?.Close();
+            }
+        }
 
         /// <summary>
         /// Called when a document has been saved.
@@ -73,6 +70,18 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
             }
         }
 
-        #endregion Internal Methods
+        /// <summary>
+        /// Called to execute the command.
+        /// </summary>
+        protected override void OnExecute()
+        {
+            base.OnExecute();
+
+            var spade = Package.SpadeForceLoad;
+            if (spade?.Frame is IVsWindowFrame spadeFrame)
+            {
+                spadeFrame.Show();
+            }
+        }
     }
 }

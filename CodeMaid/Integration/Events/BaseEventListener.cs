@@ -1,14 +1,12 @@
-using System;
+using System.Threading.Tasks;
 
 namespace SteveCadwallader.CodeMaid.Integration.Events
 {
     /// <summary>
     /// The base implementation of an event listener.
     /// </summary>
-    internal abstract class BaseEventListener : IDisposable
+    internal abstract class BaseEventListener : ISwitchableFeature
     {
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseEventListener" /> class.
         /// </summary>
@@ -18,49 +16,46 @@ namespace SteveCadwallader.CodeMaid.Integration.Events
             Package = package;
         }
 
-        #endregion Constructors
-
-        #region Properties
+        /// <summary>
+        /// Gets or sets a value indicating whether listeners are registered.
+        /// </summary>
+        protected bool IsListening { get; set; }
 
         /// <summary>
         /// Gets the hosting package.
         /// </summary>
         protected CodeMaidPackage Package { get; private set; }
 
-        #endregion Properties
-
-        #region IDisposable Members
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting
-        /// unmanaged resources.
+        /// Switches the event listener on or off, registering/unregistering from events from the IDE.
         /// </summary>
-        public void Dispose()
+        /// <param name="on">True if switching the event listener on, otherwise false.</param>
+        /// <returns>A task.</returns>
+        public async Task SwitchAsync(bool on)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
-        /// </summary>
-        /// <param name="disposing">
-        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release
-        /// only unmanaged resources.
-        /// </param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!IsDisposed)
+            if (on && !IsListening)
             {
-                IsDisposed = true;
+                IsListening = true;
+                RegisterListeners();
+            }
+            else if (IsListening && !on)
+            {
+                IsListening = false;
+                UnRegisterListeners();
             }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is disposed.
+        /// Registers event handlers with the IDE.
         /// </summary>
-        protected bool IsDisposed { get; set; }
+        protected abstract void RegisterListeners();
 
-        #endregion IDisposable Members
+        /// <summary>
+        /// Unregisters event handlers with the IDE.
+        /// </summary>
+        protected abstract void UnRegisterListeners();
     }
 }

@@ -1,38 +1,46 @@
 using EnvDTE;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using SteveCadwallader.CodeMaid.Helpers;
 using SteveCadwallader.CodeMaid.Properties;
 using System;
-using System.ComponentModel.Design;
+using Task = System.Threading.Tasks.Task;
 
 namespace SteveCadwallader.CodeMaid.Integration.Commands
 {
     /// <summary>
     /// A command that provides for finding a file in the solution explorer.
     /// </summary>
-    internal class FindInSolutionExplorerCommand : BaseCommand
+    internal sealed class FindInSolutionExplorerCommand : BaseCommand
     {
-        #region Fields
-
         private readonly CommandHelper _commandHelper;
-
-        #endregion Fields
-
-        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FindInSolutionExplorerCommand" /> class.
         /// </summary>
         /// <param name="package">The hosting package.</param>
         internal FindInSolutionExplorerCommand(CodeMaidPackage package)
-            : base(package,
-                   new CommandID(PackageGuids.GuidCodeMaidCommandFindInSolutionExplorer, PackageIds.CmdIDCodeMaidFindInSolutionExplorer))
+            : base(package, PackageGuids.GuidCodeMaidMenuSet, PackageIds.CmdIDCodeMaidFindInSolutionExplorer)
         {
             _commandHelper = CommandHelper.GetInstance(package);
         }
 
-        #endregion Constructors
+        /// <summary>
+        /// A singleton instance of this command.
+        /// </summary>
+        public static FindInSolutionExplorerCommand Instance { get; private set; }
 
-        #region BaseCommand Methods
+        /// <summary>
+        /// Initializes a singleton instance of this command.
+        /// </summary>
+        /// <param name="package">The hosting package.</param>
+        /// <returns>A task.</returns>
+        public static async Task InitializeAsync(CodeMaidPackage package)
+        {
+            Instance = new FindInSolutionExplorerCommand(package);
+            await package.SettingsMonitor.WatchAsync(s => s.Feature_FindInSolutionExplorer, Instance.SwitchAsync);
+        }
 
         /// <summary>
         /// Called to update the current status of the command.
@@ -52,6 +60,11 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
             Document document = Package.ActiveDocument;
             if (document != null)
             {
+                if (Settings.Default.Finding_ClearSolutionExplorerSearch)
+                {
+                    ClearSolutionExplorerSearchFilter();
+                }
+
                 if (Settings.Default.Finding_TemporarilyOpenSolutionFolders)
                 {
                     ToggleSolutionFoldersOpenTemporarily(UIHierarchyHelper.GetTopUIHierarchyItem(Package));
@@ -77,9 +90,16 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
             }
         }
 
-        #endregion BaseCommand Methods
-
-        #region Methods
+        /// <summary>
+        /// Clears any exising search filtering in the solution explorer so that items not matching
+        /// the query can be found.
+        /// </summary>
+        private void ClearSolutionExplorerSearchFilter()
+        {
+            var solutionExplorer = VsShellUtilities.GetUIHierarchyWindow(Package, VSConstants.StandardToolWindows.SolutionExplorer);
+            var ws = solutionExplorer as IVsWindowSearch;
+            ws?.ClearSearch();
+        }
 
         /// <summary>
         /// Toggles all solution folders open temporarily to workaround searches not working inside
@@ -122,7 +142,5 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
                 Package.IDE.ToolWindows.SolutionExplorer.DoDefaultAction();
             }
         }
-
-        #endregion Methods
     }
 }

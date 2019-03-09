@@ -1,28 +1,37 @@
 using SteveCadwallader.CodeMaid.UI.Dialogs.About;
-using System.ComponentModel.Design;
+using System.Threading.Tasks;
 
 namespace SteveCadwallader.CodeMaid.Integration.Commands
 {
     /// <summary>
     /// A command that provides for launching the CodeMaid about window.
     /// </summary>
-    internal class AboutCommand : BaseCommand
+    internal sealed class AboutCommand : BaseCommand
     {
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AboutCommand" /> class.
         /// </summary>
         /// <param name="package">The hosting package.</param>
-        internal AboutCommand(CodeMaidPackage package)
-            : base(package,
-                   new CommandID(PackageGuids.GuidCodeMaidCommandAbout, PackageIds.CmdIDCodeMaidAbout))
+        private AboutCommand(CodeMaidPackage package)
+            : base(package, PackageGuids.GuidCodeMaidMenuSet, PackageIds.CmdIDCodeMaidAbout)
         {
         }
 
-        #endregion Constructors
+        /// <summary>
+        /// A singleton instance of this command.
+        /// </summary>
+        public static AboutCommand Instance { get; private set; }
 
-        #region BaseCommand Methods
+        /// <summary>
+        /// Initializes a singleton instance of this command.
+        /// </summary>
+        /// <param name="package">The hosting package.</param>
+        /// <returns>A task.</returns>
+        public static async Task InitializeAsync(CodeMaidPackage package)
+        {
+            Instance = new AboutCommand(package);
+            await Instance.SwitchAsync(on: true);
+        }
 
         /// <summary>
         /// Called to execute the command.
@@ -33,7 +42,5 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
 
             new AboutWindow().ShowModal();
         }
-
-        #endregion BaseCommand Methods
     }
 }

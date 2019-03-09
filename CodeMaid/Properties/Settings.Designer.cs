@@ -12,7 +12,7 @@ namespace SteveCadwallader.CodeMaid.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -61,7 +61,7 @@ namespace SteveCadwallader.CodeMaid.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\.Designer\\.cs$||\\.Designer\\.vb$||\\.resx$")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\.Designer\\.cs$||\\.Designer\\.vb$||\\.resx$||\\.min\\.css$||\\.min\\.js$")]
         public string Cleaning_ExclusionExpression {
             get {
                 return ((string)(this["Cleaning_ExclusionExpression"]));
@@ -950,48 +950,24 @@ namespace SteveCadwallader.CodeMaid.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Cleaning_RunVisualStudioRemoveUnusedUsingStatements {
+        public bool Cleaning_RunVisualStudioRemoveAndSortUsingStatements {
             get {
-                return ((bool)(this["Cleaning_RunVisualStudioRemoveUnusedUsingStatements"]));
+                return ((bool)(this["Cleaning_RunVisualStudioRemoveAndSortUsingStatements"]));
             }
             set {
-                this["Cleaning_RunVisualStudioRemoveUnusedUsingStatements"] = value;
+                this["Cleaning_RunVisualStudioRemoveAndSortUsingStatements"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Cleaning_RunVisualStudioSortUsingStatements {
+        public bool Cleaning_SkipRemoveAndSortUsingStatementsDuringAutoCleanupOnSave {
             get {
-                return ((bool)(this["Cleaning_RunVisualStudioSortUsingStatements"]));
+                return ((bool)(this["Cleaning_SkipRemoveAndSortUsingStatementsDuringAutoCleanupOnSave"]));
             }
             set {
-                this["Cleaning_RunVisualStudioSortUsingStatements"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Cleaning_SkipRemoveUnusedUsingStatementsDuringAutoCleanupOnSave {
-            get {
-                return ((bool)(this["Cleaning_SkipRemoveUnusedUsingStatementsDuringAutoCleanupOnSave"]));
-            }
-            set {
-                this["Cleaning_SkipRemoveUnusedUsingStatementsDuringAutoCleanupOnSave"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Cleaning_SkipSortUsingStatementsDuringAutoCleanupOnSave {
-            get {
-                return ((bool)(this["Cleaning_SkipSortUsingStatementsDuringAutoCleanupOnSave"]));
-            }
-            set {
-                this["Cleaning_SkipSortUsingStatementsDuringAutoCleanupOnSave"] = value;
+                this["Cleaning_SkipRemoveAndSortUsingStatementsDuringAutoCleanupOnSave"] = value;
             }
         }
         
@@ -1358,6 +1334,18 @@ namespace SteveCadwallader.CodeMaid.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Digging_ShowItemTypes {
+            get {
+                return ((bool)(this["Digging_ShowItemTypes"]));
+            }
+            set {
+                this["Digging_ShowItemTypes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool Digging_ShowMethodParameters {
             get {
                 return ((bool)(this["Digging_ShowMethodParameters"]));
@@ -1376,6 +1364,18 @@ namespace SteveCadwallader.CodeMaid.Properties {
             }
             set {
                 this["Digging_SynchronizeOutlining"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Finding_ClearSolutionExplorerSearch {
+            get {
+                return ((bool)(this["Finding_ClearSolutionExplorerSearch"]));
+            }
+            set {
+                this["Finding_ClearSolutionExplorerSearch"] = value;
             }
         }
         
@@ -1922,6 +1922,18 @@ namespace SteveCadwallader.CodeMaid.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Reorganizing_ReverseOrderByAccessLevel {
+            get {
+                return ((bool)(this["Reorganizing_ReverseOrderByAccessLevel"]));
+            }
+            set {
+                this["Reorganizing_ReverseOrderByAccessLevel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool Reorganizing_RunAtStartOfCleanup {
             get {
                 return ((bool)(this["Reorganizing_RunAtStartOfCleanup"]));
@@ -1934,7 +1946,7 @@ namespace SteveCadwallader.CodeMaid.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(".cpp .h||.xaml .xaml.cs||.xml .xsd||.ascx .ascx.cs||.aspx .aspx.cs||.master .mast" +
-            "er.cs")]
+            "er.cs||.cshtml .cshtml.cs")]
         public string Switching_RelatedFileExtensionsExpression {
             get {
                 return ((string)(this["Switching_RelatedFileExtensionsExpression"]));
@@ -1989,6 +2001,261 @@ namespace SteveCadwallader.CodeMaid.Properties {
             }
             set {
                 this["ThirdParty_UseXAMLStylerCleanup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_BuildProgressToolWindow {
+            get {
+                return ((bool)(this["Feature_BuildProgressToolWindow"]));
+            }
+            set {
+                this["Feature_BuildProgressToolWindow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_CleanupActiveCode {
+            get {
+                return ((bool)(this["Feature_CleanupActiveCode"]));
+            }
+            set {
+                this["Feature_CleanupActiveCode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_CleanupAllCode {
+            get {
+                return ((bool)(this["Feature_CleanupAllCode"]));
+            }
+            set {
+                this["Feature_CleanupAllCode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_CleanupOpenCode {
+            get {
+                return ((bool)(this["Feature_CleanupOpenCode"]));
+            }
+            set {
+                this["Feature_CleanupOpenCode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_CleanupSelectedCode {
+            get {
+                return ((bool)(this["Feature_CleanupSelectedCode"]));
+            }
+            set {
+                this["Feature_CleanupSelectedCode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_CloseAllReadOnly {
+            get {
+                return ((bool)(this["Feature_CloseAllReadOnly"]));
+            }
+            set {
+                this["Feature_CloseAllReadOnly"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_CollapseAllSolutionExplorer {
+            get {
+                return ((bool)(this["Feature_CollapseAllSolutionExplorer"]));
+            }
+            set {
+                this["Feature_CollapseAllSolutionExplorer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_CollapseSelectedSolutionExplorer {
+            get {
+                return ((bool)(this["Feature_CollapseSelectedSolutionExplorer"]));
+            }
+            set {
+                this["Feature_CollapseSelectedSolutionExplorer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_CommentFormat {
+            get {
+                return ((bool)(this["Feature_CommentFormat"]));
+            }
+            set {
+                this["Feature_CommentFormat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_FindInSolutionExplorer {
+            get {
+                return ((bool)(this["Feature_FindInSolutionExplorer"]));
+            }
+            set {
+                this["Feature_FindInSolutionExplorer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_JoinLines {
+            get {
+                return ((bool)(this["Feature_JoinLines"]));
+            }
+            set {
+                this["Feature_JoinLines"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_ReadOnlyToggle {
+            get {
+                return ((bool)(this["Feature_ReadOnlyToggle"]));
+            }
+            set {
+                this["Feature_ReadOnlyToggle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_RemoveRegion {
+            get {
+                return ((bool)(this["Feature_RemoveRegion"]));
+            }
+            set {
+                this["Feature_RemoveRegion"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_ReorganizeActiveCode {
+            get {
+                return ((bool)(this["Feature_ReorganizeActiveCode"]));
+            }
+            set {
+                this["Feature_ReorganizeActiveCode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_SettingCleanupOnSave {
+            get {
+                return ((bool)(this["Feature_SettingCleanupOnSave"]));
+            }
+            set {
+                this["Feature_SettingCleanupOnSave"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_SortLines {
+            get {
+                return ((bool)(this["Feature_SortLines"]));
+            }
+            set {
+                this["Feature_SortLines"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_SpadeToolWindow {
+            get {
+                return ((bool)(this["Feature_SpadeToolWindow"]));
+            }
+            set {
+                this["Feature_SpadeToolWindow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Feature_SwitchFile {
+            get {
+                return ((bool)(this["Feature_SwitchFile"]));
+            }
+            set {
+                this["Feature_SwitchFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring>ReSharper disable </string>\r\n  <string>ReSharper enable </string>\r\n</Array" +
+            "OfString>")]
+        public global::System.Collections.Specialized.StringCollection Formatting_IgnoreLinesStartingWith {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["Formatting_IgnoreLinesStartingWith"]));
+            }
+            set {
+                this["Formatting_IgnoreLinesStartingWith"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Cleaning_InsertBlankLinePaddingBeforeFieldsSingleLine {
+            get {
+                return ((bool)(this["Cleaning_InsertBlankLinePaddingBeforeFieldsSingleLine"]));
+            }
+            set {
+                this["Cleaning_InsertBlankLinePaddingBeforeFieldsSingleLine"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Cleaning_InsertBlankLinePaddingAfterFieldsSingleLine {
+            get {
+                return ((bool)(this["Cleaning_InsertBlankLinePaddingAfterFieldsSingleLine"]));
+            }
+            set {
+                this["Cleaning_InsertBlankLinePaddingAfterFieldsSingleLine"] = value;
             }
         }
     }

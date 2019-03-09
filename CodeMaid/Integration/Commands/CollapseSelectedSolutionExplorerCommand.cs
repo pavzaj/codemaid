@@ -1,31 +1,45 @@
 using EnvDTE;
 using SteveCadwallader.CodeMaid.Helpers;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SteveCadwallader.CodeMaid.Integration.Commands
 {
     /// <summary>
     /// A command that provides for collapsing selected nodes in the solution explorer tool window.
     /// </summary>
-    internal class CollapseSelectedSolutionExplorerCommand : BaseCommand
+    internal sealed class CollapseSelectedSolutionExplorerCommand : BaseCommand
     {
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CollapseSelectedSolutionExplorerCommand" /> class.
         /// </summary>
         /// <param name="package">The hosting package.</param>
         internal CollapseSelectedSolutionExplorerCommand(CodeMaidPackage package)
-            : base(package,
-                   new CommandID(PackageGuids.GuidCodeMaidCommandCollapseSelectedSolutionExplorer, PackageIds.CmdIDCodeMaidCollapseSelectedSolutionExplorer))
+            : base(package, PackageGuids.GuidCodeMaidMenuSet, PackageIds.CmdIDCodeMaidCollapseSelectedSolutionExplorer)
         {
         }
 
-        #endregion Constructors
+        /// <summary>
+        /// A singleton instance of this command.
+        /// </summary>
+        public static CollapseSelectedSolutionExplorerCommand Instance { get; private set; }
 
-        #region BaseCommand Methods
+        /// <summary>
+        /// Gets an enumerable collection of the selected UI hierarchy items.
+        /// </summary>
+        private IEnumerable<UIHierarchyItem> SelectedUIHierarchyItems => UIHierarchyHelper.GetSelectedUIHierarchyItems(Package);
+
+        /// <summary>
+        /// Initializes a singleton instance of this command.
+        /// </summary>
+        /// <param name="package">The hosting package.</param>
+        /// <returns>A task.</returns>
+        public static async Task InitializeAsync(CodeMaidPackage package)
+        {
+            Instance = new CollapseSelectedSolutionExplorerCommand(package);
+            await package.SettingsMonitor.WatchAsync(s => s.Feature_CollapseSelectedSolutionExplorer, Instance.SwitchAsync);
+        }
 
         /// <summary>
         /// Called to update the current status of the command.
@@ -47,16 +61,5 @@ namespace SteveCadwallader.CodeMaid.Integration.Commands
                 UIHierarchyHelper.CollapseRecursively(item);
             }
         }
-
-        #endregion BaseCommand Methods
-
-        #region Private Properties
-
-        /// <summary>
-        /// Gets an enumerable collection of the selected UI hierarchy items.
-        /// </summary>
-        private IEnumerable<UIHierarchyItem> SelectedUIHierarchyItems => UIHierarchyHelper.GetSelectedUIHierarchyItems(Package);
-
-        #endregion Private Properties
     }
 }
